@@ -16,9 +16,12 @@
   <p align="center">pip install reportlab</p>
  
  
- ## PARA BAIXAR O PROJETO USANDO GIT
- <img src=>
+## PARA BAIXAR O PROJETO USANDO GIT
+ <img src="img/1.jpg">
+<p align="center"> <b> comando git clone https://github.com/luccve/bd2.git </b></p>
 
+## SEMPRE FAÇA O GIT PULL NOME_DA_BRANCH 
+<p align="center"> PARA RESGATAR AS ALTERAÇÕES MAIS RECENTES </p>
  
 
  
