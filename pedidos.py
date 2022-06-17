@@ -30,7 +30,7 @@ class Validacao:
 
 
 
-class Prontuario(Relatorios, Funcoes,  Validacao):
+class Layout(Relatorios, Funcoes,  Validacao):
 
     def __init__(self):
 
@@ -204,5 +204,3 @@ class Prontuario(Relatorios, Funcoes,  Validacao):
         self.cod_var = (self.janela.register(self.null), "%P")
     
 
-
-Prontuario()
