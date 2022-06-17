@@ -5,6 +5,7 @@ from tkinter import *
 from tkinter import ttk
 from tkinter import tix
 from tkinter import messagebox
+from h11 import ERROR
 from reportlab.pdfgen import canvas
 from reportlab.lib.pagesizes import letter, A4
 from textwrap import wrap
@@ -29,7 +30,7 @@ class Validacao:
 
 
 
-class Prontuario(Funcoes, Relatorios, Validacao):
+class Prontuario(Relatorios, Funcoes,  Validacao):
 
     def __init__(self):
 
@@ -202,5 +203,6 @@ class Prontuario(Funcoes, Relatorios, Validacao):
     def validarCOD(self):
         self.cod_var = (self.janela.register(self.null), "%P")
     
+
 
 Prontuario()

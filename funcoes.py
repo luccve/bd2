@@ -8,7 +8,7 @@ from tkinter import messagebox
 from reportlab.pdfgen import canvas
 from reportlab.lib.pagesizes import letter, A4
 from textwrap import wrap
-from relatorio import Relatorios
+
 
 
 class Funcoes():
