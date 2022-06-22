@@ -5,17 +5,18 @@ from tkinter import *
 from tkinter import ttk
 from tkinter import tix
 from tkinter import messagebox
-from h11 import ERROR
+
 from reportlab.pdfgen import canvas
 from reportlab.lib.pagesizes import letter, A4
 from textwrap import wrap
-from relatorio import Relatorios
-from funcoes import Funcoes
+from Models.Pedido import Pedido
+from Relatorios.relatorio import Relatorios
+from Services.DBManager import DBManager
 
 
 main_path = os.path.dirname(__file__)
-
 janela = tix.Tk()
+
 #logo = PhotoImage(file=main_path+'\bow.png')
 
 
@@ -28,27 +29,142 @@ class Validacao:
             return False
         return value <=100000000000
 
-
-
-class Layout(Relatorios, Funcoes,  Validacao):
+class Screen(Relatorios,  Validacao):
 
     def __init__(self):
-
         
         self.janela = janela
-        self.validarCOD()
-        self.tela()
-        self.frames()
-        self.botoes()
-        self.labels_frame1()
-        self.labels_frame2()
-        self.addPedido()
+        self.dbManager = DBManager()      
+
+        self.validarCOD() 
+        self.dbManager.CreateTables()
+        self.Intialize()
         self.select_lista()
         self.menus()
 
         janela.mainloop()
 
+    def pedidoSelected(self):
+
+        codigo = self.input_codProduto.get()
+        data = self.input_dataCompra.get()
+        quantity = self.input_qtdProduto.get()
+        describe = self.input_descProduto.get("1.0")
+
+        self.pedidoSeleted = Pedido(codigo, data, quantity, describe)
+
+    def Intialize(self):
+        self.tela()
+        self.frames()
+        self.botoes()
+        self.labels_frame1()
+        self.labels_frame2()
+        self.pedidoSelected()
+
+    def limpar(self):
+        #Limpar interface
+        self.input_codProduto.delete(0, END)
+        self.input_dataCompra.delete(0, END)
+        self.input_qtdProduto.delete(0, END)
+        self.input_descProduto.delete("1.0", END)
+
+    def adicionar(self):
+        
+        self.pedidoSelected()
+
+        if self.pedidoSeleted.codigo == "":
+
+            msg = "O cadastro de pedido só irá ser realizado\n"
+            msg+= "com o preenchimento do campo cod_Produto."
+            messagebox.showinfo("Erro de cadastro!", msg)
+            
+        else:
+            
+            #Add Pedido ao Banco de Dados
+            self.pedidoSelected()
+            self.dbManager.Create(self.pedidoSeleted)            
+
+            msg3 = "O cadastro do pedido foi adicionado."
+            messagebox.showinfo("Cadastro!", msg3)
+
+            self.select_lista()
+            self.limpar()
+
+    def select_lista(self):
+
+        self.lista_Pedidos.delete(*self.lista_Pedidos.get_children())
+
+        listaDb = self.dbManager.ReadAll()
+
+        for i in listaDb:
+            self.lista_Pedidos.insert("", END, values=i)
+
+    def duploclick(self, event):
+
+        self.limpar()
+
+        self.lista_Pedidos.selection()
+        
+        for n in self.lista_Pedidos.selection():       
+
+            col1, col2, col3, col4 = self.lista_Pedidos.item(n, 'values')
+
+            self.pedidoSeleted = Pedido(col1, col2, col3, col4)
+
+            self.input_codProduto.insert(END, col1)
+            self.input_dataCompra.insert(END, col2)
+            self.input_qtdProduto.insert(END, col3)
+            self.input_descProduto.insert(END, col4)
+          
+    def deletarpaciente(self):
+        
+        self.pedidoSelected()
+        self.dbManager.Delete(self.pedidoSeleted)
+
+        msg1 = "O pedido foi apagado."
+        messagebox.showinfo("Cadastro", msg1)
+
+        self.limpar()
+        self.select_lista()
+
+    def alterarPedido(self):
+
+        self.pedidoSelected()
+        self.dbManager.Update(self.pedidoSeleted)        
+
+        msg2 = "O cadastro do pedido foi alterado."
+        messagebox.showinfo("Cadastro", msg2)
+
+        self.select_lista()
+        self.limpar()
+
+    def buscar(self):
+        
+        self.lista_Pedidos.delete(*self.lista_Pedidos.get_children())
+
+        self.input_dataCompra.insert(END,'%')
+
+        if self.cod_Produto == "":
+
+            msg4 = "Preencha o campo do codigo."
+            messagebox.showinfo("Cadastro", msg4)
+
+        else:
+
+            codigo = self.input_codProduto.get()
+
+            result = self.dbManager.Read(codigo)
+
+            for i in result:
+                self.lista_Pedidos.insert("", END, values = i)
+        
+        self.limpar()        
+
+    def validarCOD(self):
+        self.cod_var = (self.janela.register(self.null), "%P")
+
     def tela(self):
+        
         self.xWindows = 1280
         self.yWindows = 720
         self.title = "SISTEMA DE PEDIDOS"
@@ -164,17 +280,19 @@ class Layout(Relatorios, Funcoes,  Validacao):
     def labels_frame2(self):
         self.lista_Pedidos= ttk.Treeview(self.frame2, height=3, columns=('col1', 'col2', 'col3', 'col4'))
         #cabeçario
-        self.lista_Pedidos.heading('#0', text="Código de produto")
-        self.lista_Pedidos.heading('#1', text="data de compra")
-        self.lista_Pedidos.heading('#2', text="Quantidade")
-        self.lista_Pedidos.heading('#3', text="Descrição do produto")
+        self.lista_Pedidos.heading('#0', text="")
+        self.lista_Pedidos.heading('#1', text="Código de produto")
+        self.lista_Pedidos.heading('#2', text="data de compra")
+        self.lista_Pedidos.heading('#3', text="Quantidade")
+        self.lista_Pedidos.heading('#4', text="Descrição do produto")
        
 
         #colunas
-        self.lista_Pedidos.column('#0', width=150)
-        self.lista_Pedidos.column('#1', width=150)
-        self.lista_Pedidos.column('#2', width=100)
-        self.lista_Pedidos.column('#3', width=200)
+        self.lista_Pedidos.column('#0', width=0)
+        self.lista_Pedidos.column('#1', width=50)
+        self.lista_Pedidos.column('#2', width=50)
+        self.lista_Pedidos.column('#3', width=50)
+        self.lista_Pedidos.column('#4', width=100)
     
 
         #criaçao
@@ -199,8 +317,4 @@ class Layout(Relatorios, Funcoes,  Validacao):
 
         menu1.add_command(label="Sair", command=Quit)
         menu2.add_command(label="Gerar relatório", command=self.geraRel)
-
-    def validarCOD(self):
-        self.cod_var = (self.janela.register(self.null), "%P")
-    
 

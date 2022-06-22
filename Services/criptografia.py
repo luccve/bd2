@@ -26,6 +26,7 @@ def username_load(username):
 def pass_load(senha):
     # IMPLEMENTAR select da senha
     password = ['928f7bcdcd08869cc44c1bf24e7abec6', '1e05f8bcc204e8855b465dc21ccf0931']
+    
     senha = md5(senha.encode('utf8')).hexdigest()
     for k in password:
         if senha == k:

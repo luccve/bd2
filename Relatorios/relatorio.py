@@ -8,15 +8,16 @@ from tkinter import messagebox
 from reportlab.pdfgen import canvas
 from reportlab.lib.pagesizes import letter, A4
 from textwrap import wrap
-from funcoes import Funcoes
 
 
 
-class Relatorios(Event, Funcoes):
+class Relatorios(Event):
+
     def abrirPdf(self):
-        self.id_p = self.input_codProduto.get()+"_pedido.pdf" 
-        
+
+        self.id_p = self.input_codProduto.get()+"_pedido.pdf"         
         webbrowser.open(self.id_p)
+
     def geraRel(self):
         self.pedidosRelatorio = canvas.Canvas(self.input_codProduto.get()+"_pedido.pdf")
 
@@ -28,7 +29,7 @@ class Relatorios(Event, Funcoes):
      
         
         self.pedidosRelatorio.setFont("Helvetica-Bold", 24)
-        self.pedidosRelatorio.drawString(200, 790, 'Ficha do Paciente')
+        self.pedidosRelatorio.drawString(200, 790, 'Pedido')
 
         self.pedidosRelatorio.setFont("Helvetica-Bold", 14)
         self.pedidosRelatorio.drawString(50, 700, 'Código do pedido: ')
