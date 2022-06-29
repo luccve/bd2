@@ -1,21 +1,28 @@
 from Models.Pedido import Pedido
-import sqlite3
+import psycopg2
 
 
 class DBManager:        
 
-    def conectarbd(self):
-        # IMPLEMENTAR O SGBDEXTERNO
+    def __init__(self):
 
-        self.conectionDatabase = sqlite3.connect("pedidos.db")
-        self.cursor = self.conectionDatabase.cursor(); 
+        self.conectarbd()
+        self.CreateSequence()
+        self.CreateTables()
+        self.desconectarbd()
 
-        print("Conectando ao banco de dados")
+    def CreateSequence(self):
+        self.conectarbd()
 
-    def desconectarbd(self):
+        #criando tabelas
+        self.cursor.execute("""
+            CREATE SEQUENCE IF NOT EXISTS pedidos_id_seq INCREMENT 1;
+        """)
 
-        self.conectionDatabase.close(); 
-        print("Banco de dados desconectado")
+        self.conection.commit();         
+        print('Create sequence')
+
+        self.desconectarbd()
 
     def CreateTables(self):
 
@@ -24,27 +31,42 @@ class DBManager:
         #criando tabelas
         self.cursor.execute("""
             CREATE TABLE IF NOT EXISTS pedidos (
-                cod_Produto INTERGER PRIMARY KEY,
+                cod_Produto INTEGER PRIMARY KEY NOT NULL DEFAULT nextval('pedidos_id_seq'::regclass),
                 data_Compra DATE,
-                qtd_Produto INTERGER,
-                desc_Produto text
-
+                qtd_Produto INTEGER,
+                desc_Produto CHARACTER VARYING(80)
             );
         """)
 
-        self.conectionDatabase.commit();         
+        self.conection.commit();         
         print('Tables Criadas')
 
         self.desconectarbd()
 
-    def Create(self, pedido):
+    def conectarbd(self):
+        # IMPLEMENTAR O SGBDEXTERNO
+
+        self.conection = psycopg2.connect("dbname=postgres user=postgres password=root host=localhost port=5432")
+
+        self.cursor = self.conection.cursor(); 
+
+        print("Conectando ao banco de dados")
+
+    def desconectarbd(self):
+
+        self.conection.close(); 
+        print("Banco de dados desconectado")
+
+    def Add(self, pedido):
 
         self.conectarbd()
 
-        self.cursor.execute(""" INSERT INTO pedidos (cod_Produto, data_Compra, qtd_Produto, desc_Produto)            
-                VALUES (?,?,?,?)""", (pedido.codigo, pedido.date, pedido.quantity, pedido.describe))
+        query = '''INSERT INTO pedidos (data_compra, qtd_produto, desc_produto)            
+                VALUES (%s,%s,%s)'''                
 
-        self.conectionDatabase.commit()
+        self.cursor.execute(query, (pedido.date, pedido.quantity, pedido.describe))
+
+        self.conection.commit()
 
         self.desconectarbd()
             
@@ -55,7 +77,7 @@ class DBManager:
         self.cursor.execute(""" UPDATE pedidos SET  cod_Produto = ?, data_Compra = ?, qtd_Produto = ?, desc_Produto = ? 
             WHERE cod_Produto=? """, (pedido.codigo, pedido.date, pedido.quantity, pedido.describe, pedido.codigo))
 
-        self.conectionDatabase.commit()
+        self.conection.commit()
         self.desconectarbd()
 
     def Read(self, codigo):
@@ -73,7 +95,9 @@ class DBManager:
 
         lista = self.cursor.execute("""SELECT cod_Produto, data_Compra, qtd_Produto, desc_Produto
                     FROM pedidos ORDER BY data_Compra ASC; """)    
-    
+
+        lista = self.cursor.fetchall()
+
         return lista
 
     def Delete(self, pedido):
@@ -83,7 +107,7 @@ class DBManager:
         self.cursor.execute(
             """ DELETE FROM pedidos WHERE cod_Produto = ? """, [pedido.codigo])
 
-        self.conectionDatabase.commit()
+        self.conection.commit()
         self.desconectarbd()
 
 

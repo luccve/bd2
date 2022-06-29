@@ -34,10 +34,9 @@ class Screen(Relatorios,  Validacao):
     def __init__(self):
         
         self.janela = janela
-        self.dbManager = DBManager()      
+        self.dbManager = DBManager()     
 
         self.validarCOD() 
-        self.dbManager.CreateTables()
         self.Intialize()
         self.select_lista()
         self.menus()
@@ -82,7 +81,7 @@ class Screen(Relatorios,  Validacao):
             
             #Add Pedido ao Banco de Dados
             self.pedidoSelected()
-            self.dbManager.Create(self.pedidoSeleted)            
+            self.dbManager.Add(self.pedidoSeleted)            
 
             msg3 = "O cadastro do pedido foi adicionado."
             messagebox.showinfo("Cadastro!", msg3)
@@ -96,8 +95,8 @@ class Screen(Relatorios,  Validacao):
 
         listaDb = self.dbManager.ReadAll()
 
-        for i in listaDb:
-            self.lista_Pedidos.insert("", END, values=i)
+        for pedido in listaDb:
+            self.lista_Pedidos.insert("", END, values=pedido)
 
     def duploclick(self, event):
 
