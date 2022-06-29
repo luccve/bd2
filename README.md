@@ -21,11 +21,12 @@
 
 ## SEMPRE FAÇA O GIT PULL NOME_DA_BRANCH 
 <p align="center"> PARA RESGATAR AS ALTERAÇÕES MAIS RECENTES </p>
- 
+
 
 <p align="left"> <img src="https://komarev.com/ghpvc/?username=luccve&label=Profile%20views&color=0e75b6&style=flat" alt="luccve" /> </p>
 
 - Altuamente estamos precisamos de interligar com O SGBD EXTERNO [ALPHABET](https://github.com/luccve/bd2)
+- Você vai precisar ter instalado o PostgreSQL: https://www.postgresql.org/download/
 
 <h3 align="left">Connect with me:</h3>
 <p align="left">
