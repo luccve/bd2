@@ -15,7 +15,6 @@ from Services.DBManager import DBManager
 
 
 main_path = os.path.dirname(__file__)
-janela = tix.Tk()
 
 #logo = PhotoImage(file=main_path+'\bow.png')
 
@@ -33,7 +32,7 @@ class Screen(Relatorios,  Validacao):
 
     def __init__(self):
         
-        self.janela = janela
+        self.janela = Toplevel()
         self.dbManager = DBManager()     
 
         self.validarCOD() 
@@ -41,7 +40,7 @@ class Screen(Relatorios,  Validacao):
         self.select_lista()
         self.menus()
 
-        janela.mainloop()
+        self.janela.mainloop()
 
     def pedidoSelected(self):
 

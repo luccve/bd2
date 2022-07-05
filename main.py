@@ -1,3 +1,6 @@
+from View.ScreenLogin import ScreenLogin
+from View.Screen import Screen
+
 if __name__ == "__main__":
     try:
 
@@ -17,7 +20,6 @@ if __name__ == "__main__":
 
         print ("voce tem alguma biblioteca nao instalada")
 
-    finally:
-        from View.Screen import Screen
-        Screen()
+    finally:       
+        ScreenLogin()
     
