@@ -1,10 +1,26 @@
 from Models.Pedido import Pedido
 import psycopg2
+from tkinter import messagebox
 
+USER = "user"
+PASSWORD = "password"
+HOST = "host"
+PORT = "port"
 
 class DBManager:        
 
     def __init__(self):
+
+        self.GetDataLogin()
+          
+    def GetDataLogin(self):
+
+        self.user = USER
+        self.password = PASSWORD
+        self.host = HOST
+        self.port = PORT  
+
+    def Initialize(self):
 
         self.conectarbd()
         self.CreateSequence()
@@ -46,7 +62,7 @@ class DBManager:
     def conectarbd(self):
         # IMPLEMENTAR O SGBDEXTERNO
 
-        self.conection = psycopg2.connect("dbname=postgres user=postgres password=root host=localhost port=5432")
+        self.conection = psycopg2.connect(f"dbname=postgres user={self.user} password={self.password} host={self.host} port={self.port}")
 
         self.cursor = self.conection.cursor(); 
 
@@ -109,6 +125,22 @@ class DBManager:
 
         self.conection.commit()
         self.desconectarbd()
+
+    def loginDatabase(self,user,password,host="localhost",port="5432"):
+
+        USER = user
+        PASSWORD = password
+        HOST = host
+        PORT = port
+
+        self.GetDataLogin()
+            
+        self.conection = psycopg2.connect(f"dbname=postgres user={self.user} password={self.password} host={self.host} port={self.port}")
+
+        self.cursor = self.conection.cursor(); 
+
+        return True
+
 
 
 

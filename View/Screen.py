@@ -33,7 +33,8 @@ class Screen(Relatorios,  Validacao):
     def __init__(self):
         
         self.janela = Toplevel()
-        self.dbManager = DBManager()     
+        self.dbManager = DBManager()  
+        self.dbManager.Initialize()   
 
         self.validarCOD() 
         self.Intialize()

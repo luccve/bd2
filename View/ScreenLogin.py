@@ -1,6 +1,7 @@
 from tkinter import *
 from tkinter import Tk, ttk, tix
 from tkinter import messagebox
+from Services.DBManager import DBManager
 from View.Screen import Screen
 
 class ScreenLogin():
@@ -13,6 +14,7 @@ class ScreenLogin():
         self.janela.geometry('310x300')
         self.janela.config(background="#f0f3f5")
         self.janela.resizable(width=False, height=False)
+        self.dBManager = DBManager()
 
         self.InitializeFrames()
         self.InitializeFrameAbove()
@@ -60,8 +62,9 @@ class ScreenLogin():
         nome = self.e_nome.get()
         senha = self.e_pass.get()
 
-        if nome == 'admin' and senha == 'admin':
-            messagebox.showinfo('Login', 'Seja bem Vindo Admin!')          
+        if self.dBManager.loginDatabase(nome,senha):
+
+            messagebox.showinfo('Login', 'Seja bem Vindo(a)!')          
 
             self.nova_janela()
 
