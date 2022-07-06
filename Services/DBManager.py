@@ -2,10 +2,10 @@ from Models.Pedido import Pedido
 import psycopg2
 from tkinter import messagebox
 
-USER = "user"
-PASSWORD = "password"
-HOST = "host"
-PORT = "port"
+USER = "postgres"
+PASSWORD = "root"
+HOST = "localhost"
+PORT = "5432"
 
 class DBManager:        
 
@@ -22,10 +22,9 @@ class DBManager:
 
     def Initialize(self):
 
-        self.conectarbd()
         self.CreateSequence()
         self.CreateTables()
-        self.desconectarbd()
+        self.CreateViewPedidos()
 
     def CreateSequence(self):
         self.conectarbd()
@@ -73,6 +72,17 @@ class DBManager:
         self.conection.close(); 
         print("Banco de dados desconectado")
 
+    def CreateViewPedidos(self):
+
+        self.conectarbd()
+
+        self.cursor.execute("""CREATE OR REPLACE VIEW ultimos_pedidos as SELECT cod_Produto, data_Compra, qtd_Produto, desc_Produto
+                    FROM pedidos ORDER BY data_Compra ASC; """)    
+        
+        self.conection.commit()
+
+        self.desconectarbd()           
+
     def Add(self, pedido):
 
         self.conectarbd()
@@ -109,8 +119,7 @@ class DBManager:
 
         self.conectarbd()
 
-        lista = self.cursor.execute("""SELECT cod_Produto, data_Compra, qtd_Produto, desc_Produto
-                    FROM pedidos ORDER BY data_Compra ASC; """)    
+        lista = self.cursor.execute("select * from ultimos_pedidos ")    
 
         lista = self.cursor.fetchall()
 
@@ -128,18 +137,16 @@ class DBManager:
 
     def loginDatabase(self,user,password,host="localhost",port="5432"):
 
-        USER = user
-        PASSWORD = password
-        HOST = host
-        PORT = port
-
         self.GetDataLogin()
-            
+ 
         self.conection = psycopg2.connect(f"dbname=postgres user={self.user} password={self.password} host={self.host} port={self.port}")
 
         self.cursor = self.conection.cursor(); 
 
         return True
+
+        
+
 
 
 

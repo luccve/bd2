@@ -59,6 +59,7 @@ class ScreenLogin():
         self.b_confirmar.place(x=15, y=180)
 
     def verificar_senha(self):
+        
         nome = self.e_nome.get()
         senha = self.e_pass.get()
 
