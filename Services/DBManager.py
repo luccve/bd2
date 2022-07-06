@@ -130,7 +130,7 @@ class DBManager:
 
             self.conectarbd()
 
-            comand = f""" UPDATE pedidos SET data_Compra = {pedido.date}, qtd_Produto = {pedido.quantity}, desc_Produto = {pedido.describe} WHERE cod_Produto= {pedido.codigo} """
+            comand = f""" UPDATE pedidos SET data_compra = '{pedido.date}', qtd_produto = {pedido.quantity}, desc_produto = '{pedido.describe}' WHERE cod_produto = {pedido.codigo} """
 
             self.cursor.execute(comand)
 
@@ -190,7 +190,7 @@ class DBManager:
             self.conectarbd()
 
             self.cursor.execute(
-                """ DELETE FROM pedidos WHERE cod_Produto = ? """, [pedido.codigo])
+                f""" DELETE FROM pedidos WHERE cod_Produto = {pedido.codigo}""")
 
             self.conection.commit()
         
