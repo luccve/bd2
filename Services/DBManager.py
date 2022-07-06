@@ -127,10 +127,10 @@ class DBManager:
     def Update(self, pedido):
 
         try:
-
             self.conectarbd()
-
-            comand = f""" UPDATE pedidos SET data_compra = '{pedido.date}', qtd_produto = {pedido.quantity}, desc_produto = '{pedido.describe}' WHERE cod_produto = {pedido.codigo} """
+            
+            #Controle de Concorrência            
+            comand = f"""LOCK TABLE pedidos IN ROW EXCLUSIVE  MODE; UPDATE pedidos SET data_compra = '{pedido.date}', qtd_produto = {pedido.quantity}, desc_produto = '{pedido.describe}' WHERE cod_produto = {pedido.codigo}"""
 
             self.cursor.execute(comand)
 
@@ -190,7 +190,7 @@ class DBManager:
             self.conectarbd()
 
             self.cursor.execute(
-                f""" DELETE FROM pedidos WHERE cod_Produto = {pedido.codigo}""")
+                f"""LOCK TABLE pedidos IN ROW EXCLUSIVE  MODE; DELETE FROM pedidos WHERE cod_Produto = {pedido.codigo}""")
 
             self.conection.commit()
         

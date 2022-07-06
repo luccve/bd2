@@ -1,4 +1,5 @@
 import os
+from tokenize import String
 import webbrowser
 import sqlite3
 from tkinter import *
@@ -118,6 +119,14 @@ class Screen(Relatorios,  Validacao):
     def deletarpaciente(self):
         
         self.pedidoSelected()
+
+        if self.input_codProduto.get() == "":
+
+            messagebox.showinfo("Erro", "Campo Código vazio. Dê um doubleclick para selecionar um pedido.")
+
+            return
+
+
         self.dbManager.Delete(self.pedidoSeleted)
 
         msg1 = "O pedido foi apagado."
