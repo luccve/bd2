@@ -1,3 +1,5 @@
+from ast import Try
+from msilib.schema import Error
 from Models.Pedido import Pedido
 import psycopg2
 from tkinter import messagebox
@@ -61,89 +63,160 @@ class DBManager:
     def conectarbd(self):
         # IMPLEMENTAR O SGBDEXTERNO
 
-        self.conection = psycopg2.connect(f"dbname=postgres user={self.user} password={self.password} host={self.host} port={self.port}")
+        try:
+            self.conection = psycopg2.connect(f"dbname=postgres user={self.user} password={self.password} host={self.host} port={self.port}")
 
-        self.cursor = self.conection.cursor(); 
+            self.cursor = self.conection.cursor(); 
 
-        print("Conectando ao banco de dados")
+            print("Banco de dados Conectado")
+
+        except Exception as e:
+
+            messagebox.showwarning('Erro',f'Erro na conexão com o banco de dados: {e}')
 
     def desconectarbd(self):
 
-        self.conection.close(); 
-        print("Banco de dados desconectado")
+        try:
+
+            self.conection.close(); 
+            print("Banco de dados desconectado")
+
+        except Exception as e:
+
+            messagebox.showwarning('Erro',f'Erro on desconectarbd: {e}')            
 
     def CreateViewPedidos(self):
 
-        self.conectarbd()
+        try:
+            self.conectarbd()
+            self.cursor.execute("""CREATE OR REPLACE VIEW ultimos_pedidos as SELECT cod_Produto, data_Compra, qtd_Produto, desc_Produto
+                        FROM pedidos ORDER BY data_Compra ASC; """)    
+            
+            self.conection.commit()
 
-        self.cursor.execute("""CREATE OR REPLACE VIEW ultimos_pedidos as SELECT cod_Produto, data_Compra, qtd_Produto, desc_Produto
-                    FROM pedidos ORDER BY data_Compra ASC; """)    
-        
-        self.conection.commit()
+            print("View ultimos_pedidos criada")
 
-        self.desconectarbd()           
+        except Exception as e:
+
+            messagebox.showwarning('Erro',f'Erro on CreateViewPedidos: {e}')
+
+        finally:
+            self.desconectarbd()           
 
     def Add(self, pedido):
 
-        self.conectarbd()
+        try:
 
-        query = '''INSERT INTO pedidos (data_compra, qtd_produto, desc_produto)            
-                VALUES (%s,%s,%s)'''                
+            self.conectarbd()
 
-        self.cursor.execute(query, (pedido.date, pedido.quantity, pedido.describe))
+            query = '''INSERT INTO pedidos (data_compra, qtd_produto, desc_produto)            
+                    VALUES (%s,%s,%s)'''                
 
-        self.conection.commit()
+            self.cursor.execute(query, (pedido.date, pedido.quantity, pedido.describe))
 
-        self.desconectarbd()
+            self.conection.commit()
+
+        except Exception as e:
+
+            messagebox.showwarning('Erro',f'Erro on Add: {e}')
+
+        finally:
+
+            self.desconectarbd()
             
     def Update(self, pedido):
 
-        self.conectarbd()
+        try:
 
-        self.cursor.execute(""" UPDATE pedidos SET  cod_Produto = ?, data_Compra = ?, qtd_Produto = ?, desc_Produto = ? 
-            WHERE cod_Produto=? """, (pedido.codigo, pedido.date, pedido.quantity, pedido.describe, pedido.codigo))
+            self.conectarbd()
 
-        self.conection.commit()
-        self.desconectarbd()
+            comand = f""" UPDATE pedidos SET data_Compra = {pedido.date}, qtd_Produto = {pedido.quantity}, desc_Produto = {pedido.describe} WHERE cod_Produto= {pedido.codigo} """
+
+            self.cursor.execute(comand)
+
+            self.conection.commit()
+
+        except Exception as e:
+
+            messagebox.showwarning('Erro',f'Erro on Update: {e}')
+
+        finally:
+
+            self.desconectarbd()
 
     def Read(self, codigo):
 
-        self.conectarbd()
-        
-        lista = self.cursor.execute(
-            """ SELECT * FROM pedidos WHERE cod_Produto =? """ , codigo)   
+        try:
 
-        return lista
+            self.conectarbd()
+            
+            lista = self.cursor.execute(
+                """ SELECT * FROM pedidos WHERE cod_Produto =? """ , codigo)                      
 
+            return lista
+
+        except Exception as e:
+
+            messagebox.showwarning('Erro',f'Erro on Read: {e}')
+            
+        finally:   
+
+            self.desconectarbd()
+            
     def ReadAll(self):
 
-        self.conectarbd()
+        try:
+            
+            self.conectarbd()
 
-        lista = self.cursor.execute("select * from ultimos_pedidos ")    
+            lista = self.cursor.execute("select * from ultimos_pedidos ")    
 
-        lista = self.cursor.fetchall()
+            lista = self.cursor.fetchall()
 
-        return lista
+            return lista
+
+        except Exception as e:
+
+            messagebox.showwarning('Erro',f'Erro on ReadAll: {e}')
+        
+        finally:
+
+            self.cursor.close()
 
     def Delete(self, pedido):
 
-        self.conectarbd()
+        try:
+            
+            self.conectarbd()
 
-        self.cursor.execute(
-            """ DELETE FROM pedidos WHERE cod_Produto = ? """, [pedido.codigo])
+            self.cursor.execute(
+                """ DELETE FROM pedidos WHERE cod_Produto = ? """, [pedido.codigo])
 
-        self.conection.commit()
-        self.desconectarbd()
+            self.conection.commit()
+        
+        except Exception as e:
+
+            messagebox.showwarning('Erro',f'Erro on Delete: {e}')
+
+        finally:
+
+            self.desconectarbd()
 
     def loginDatabase(self,user,password,host="localhost",port="5432"):
 
-        self.GetDataLogin()
- 
-        self.conection = psycopg2.connect(f"dbname=postgres user={self.user} password={self.password} host={self.host} port={self.port}")
+        try:
 
-        self.cursor = self.conection.cursor(); 
+            self.GetDataLogin()
+    
+            self.conection = psycopg2.connect(f"dbname=postgres user={self.user} password={self.password} host={self.host} port={self.port}")
 
-        return True
+            self.cursor = self.conection.cursor(); 
+
+            return True
+
+        except Exception as e:
+
+            messagebox.showwarning('Erro',f'Erro on loginDatabase: {e}')
 
         
 

@@ -48,7 +48,7 @@ class Screen(Relatorios,  Validacao):
         codigo = self.input_codProduto.get()
         data = self.input_dataCompra.get()
         quantity = self.input_qtdProduto.get()
-        describe = self.input_descProduto.get("1.0")
+        describe = self.input_descProduto.get("1.0", END)
 
         self.pedidoSeleted = Pedido(codigo, data, quantity, describe)
 
