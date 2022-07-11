@@ -17,13 +17,13 @@ class Criptografia ():
         else:
             self.senha = md5(senha.encode('utf8')).hexdigest()
             for s in self.users.values():
-                if s[1] == self.senha and self.users.get(nome):
+                if s[1] == self.senha and self.users.get(nome.lower()):
                     return True
                 else:
                     return False
 
     def tipo_login(self, nome):
-        if nome == "admin":
+        if nome.lower() == "admin":
             return True
         else:
             return False
