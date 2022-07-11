@@ -1,15 +1,10 @@
 import os
 from tokenize import String
-import webbrowser
-import sqlite3
 from tkinter import *
 from tkinter import ttk
 from tkinter import tix
 from tkinter import messagebox
-from hashlib import md5
-from reportlab.pdfgen import canvas
 from reportlab.lib.pagesizes import letter, A4
-from textwrap import wrap
 from Models.Pedido import Pedido
 from Relatorios.relatorio import Relatorios
 from Services.DBManager import DBManager
@@ -190,36 +185,36 @@ class Screen(Relatorios,  Validacao, Criptografia):
         self.limpar()
 
     def validarCOD(self):
-        self.cod_var = (self.janela.register(self.null), "%P")
+        self.cod_var = (self.janela2.register(self.null), "%P")
 
     def tela(self):
 
         self.xWindows = 1280
         self.yWindows = 720
         self.title = "SISTEMA DE PEDIDOS"
-        self.janela.title(self.title)
+        self.janela2.title(self.title)
 
-        self.janela.configure(background='#46295a')
+        self.janela2.configure(background='#46295a')
 
-        self.janela.geometry(f'{self.xWindows}x{self.yWindows}')
+        self.janela2.geometry(f'{self.xWindows}x{self.yWindows}')
 
-        self.janela.resizable(True, True)
+        self.janela2.resizable(True, True)
 
-        self.janela.maxsize(width=1920, height=1080)
+        self.janela2.maxsize(width=1920, height=1080)
 
-        self.janela.minsize(width=550, height=380)
+        self.janela2.minsize(width=550, height=380)
 
-        self.janela.iconbitmap(main_path, 'bow.ico')
+        self.janela2.iconbitmap(main_path, 'bow.ico')
 
     def frames(self):
 
-        self.frame1 = Frame(self.janela, bd=4, bg='#F0F8FF',
+        self.frame1 = Frame(self.janela2, bd=4, bg='#F0F8FF',
 
                             highlightbackground='black', highlightthickness=4)
 
         self.frame1.place(relx=0.02, rely=0.02, relwidth=0.45, relheight=0.96)
 
-        self.frame2 = Frame(self.janela, bd=4, bg='#BEBEBE',
+        self.frame2 = Frame(self.janela2, bd=4, bg='#BEBEBE',
 
                             highlightbackground='black', highlightthickness=3)
 
@@ -308,7 +303,7 @@ class Screen(Relatorios,  Validacao, Criptografia):
             self.bt_add, balloonmsg="Preencha os dados do pedido e clique em adicionar.")
 
         # logo imagem
-        # self.logo = Label(janela, image= logo, bg='#F0F8FF')
+        # self.logo = Label(janela2, image= logo, bg='#F0F8FF')
         # self.logo.place(relx=0.64, rely= 0.075)
 
         # sobre
@@ -345,16 +340,17 @@ class Screen(Relatorios,  Validacao, Criptografia):
         self.lista_Pedidos.bind("<Double-1>", self.duploclick)
 
     def menus(self):
-        menubar = Menu(self.janela)
-        self.janela.config(menu=menubar)
+        menubar = Menu(self.janela2)
+        self.janela2.config(menu=menubar)
         menu1 = Menu(menubar)
         menu2 = Menu(menubar)
 
-        def Quit(): self.janela.destroy()
+        def Quit(): self.janela2.destroy()
 
         menubar.add_cascade(label="Opções", menu=menu1)
         menubar.add_cascade(label="Exportar", menu=menu2)
 
+        menu1.add_command(label="Atualizar", command=self.select_lista)
         menu1.add_command(label="Sair", command=Quit)
         menu2.add_command(label="Gerar relatório", command=self.geraRel)
 
@@ -413,8 +409,8 @@ class Screen(Relatorios,  Validacao, Criptografia):
                 'Erro', 'Verifique o nome e a senha do usuário')
 
     def nova_janela(self):
-
-        self.janela = Toplevel()
+        self.janela.geometry('0x0')
+        self.janela2 = Toplevel()
         self.dbManager = DBManager()
         self.dbManager.Initialize()
 
@@ -423,4 +419,4 @@ class Screen(Relatorios,  Validacao, Criptografia):
         self.select_lista()
         self.menus()
 
-        self.janela.mainloop()
+        self.janela2.mainloop()
