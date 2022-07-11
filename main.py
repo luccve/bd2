@@ -1,3 +1,4 @@
+
 if __name__ == "__main__":
     try:
 
@@ -12,13 +13,11 @@ if __name__ == "__main__":
         from reportlab.lib.pagesizes import letter, A4
         from textwrap import wrap
         from Relatorios.relatorio import Relatorios
-        from View.ScreenLogin import ScreenLogin
         from View.Screen import Screen
 
     except ValueError:
 
-        print ("voce tem alguma biblioteca nao instalada")
+        print("voce tem alguma biblioteca nao instalada")
 
-    finally:       
-        ScreenLogin()
-    
+    finally:
+        Screen()
