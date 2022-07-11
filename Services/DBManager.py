@@ -72,7 +72,7 @@ class DBManager:
 
         except Exception as e:
 
-            messagebox.showwarning('Erro',f'Erro na conexão com o banco de dados: {e}')
+            print(f'Erro na conexão com o banco de dados: {e}')
 
     def desconectarbd(self):
 
@@ -83,7 +83,7 @@ class DBManager:
 
         except Exception as e:
 
-            messagebox.showwarning('Erro',f'Erro on desconectarbd: {e}')            
+            print(f'Erro ao desconectar banco de dados: {e}')            
 
     def CreateViewPedidos(self):
 
@@ -98,7 +98,7 @@ class DBManager:
 
         except Exception as e:
 
-            messagebox.showwarning('Erro',f'Erro on CreateViewPedidos: {e}')
+            print(f'Erro em CreateViewPedidos: {e}')
 
         finally:
             self.desconectarbd()           
@@ -118,7 +118,7 @@ class DBManager:
 
         except Exception as e:
 
-            messagebox.showwarning('Erro',f'Erro on Add: {e}')
+            messagebox.showwarning('Erro',f' Não é possível adicinar esse pedido: {e}')
 
         finally:
 
@@ -138,7 +138,7 @@ class DBManager:
 
         except Exception as e:
 
-            messagebox.showwarning('Erro',f'Erro on Update: {e}')
+            messagebox.showwarning('Erro',f'Em atualizar pedidos verifique há um pedido selecionado.')
 
         finally:
 
@@ -157,7 +157,7 @@ class DBManager:
 
         except Exception as e:
 
-            messagebox.showwarning('Erro',f'Erro on Read: {e}')
+            messagebox.showwarning('Erro',f'Erro ao ler o pedido de cod: {codigo}')
             
         finally:   
 
@@ -177,7 +177,7 @@ class DBManager:
 
         except Exception as e:
 
-            messagebox.showwarning('Erro',f'Erro on ReadAll: {e}')
+            messagebox.showwarning('Erro',f'A consulta a pedidps está indiponível no momento')
         
         finally:
 
@@ -196,7 +196,7 @@ class DBManager:
         
         except Exception as e:
 
-            messagebox.showwarning('Erro',f'Erro on Delete: {e}')
+            messagebox.showwarning('Erro',f'Não foi possível deletar o pedido cod: {pedido.codigo}')
 
         finally:
 
@@ -216,7 +216,7 @@ class DBManager:
 
         except Exception as e:
 
-            messagebox.showwarning('Erro',f'Erro on loginDatabase: {e}')
+            messagebox.showwarning('Erro',f'Erro no login: {e}')
 
         
 
