@@ -5,7 +5,7 @@ import psycopg2
 from tkinter import messagebox
 
 USER = "postgres"
-PASSWORD = "ifpe2021"
+PASSWORD = "root"
 HOST = "localhost"
 PORT = "5432"
 
@@ -156,7 +156,9 @@ class DBManager:
             self.conectarbd()
 
             lista = self.cursor.execute(
-                """ SELECT * FROM pedidos WHERE cod_Produto =? """, codigo)
+                f""" SELECT * FROM pedidos WHERE cod_Produto = {codigo} """)
+
+            lista = self.cursor.fetchall()
 
             return lista
 
