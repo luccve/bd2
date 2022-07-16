@@ -1,13 +1,12 @@
-from ast import Try
-from msilib.schema import Error
-from Models.Pedido import Pedido
 import psycopg2
 from tkinter import messagebox
 
 USER = "postgres"
-PASSWORD = "root"
+PASSWORD = "ifpe2021"
 HOST = "localhost"
 PORT = "5432"
+SENHA = "123"
+USUARIO = "trabalho"
 
 
 class DBManager:
@@ -22,15 +21,17 @@ class DBManager:
         self.password = PASSWORD
         self.host = HOST
         self.port = PORT
+        self.senha = SENHA
+        self.usuario = USUARIO
 
-    def Initialize(self):
+    def Initialize(self, senha, usuario):
 
-        self.CreateSequence()
-        self.CreateTables()
-        self.CreateViewPedidos()
+        self.CreateSequence(senha, usuario)
+        self.CreateTables(senha, usuario)
+        self.CreateViewPedidos(senha, usuario)
 
-    def CreateSequence(self):
-        self.conectarbd()
+    def CreateSequence(self, senha, usuario):
+        self.conectarbd(senha, usuario)
 
         # criando tabelas
         self.cursor.execute("""
@@ -42,9 +43,9 @@ class DBManager:
 
         self.desconectarbd()
 
-    def CreateTables(self):
+    def CreateTables(self, senha, usuario):
 
-        self.conectarbd()
+        self.conectarbd(senha, usuario)
 
         # criando tabelas
         self.cursor.execute("""
@@ -54,6 +55,7 @@ class DBManager:
                 qtd_Produto INTEGER CHECK (qtd_Produto >= 0),
                 desc_Produto CHARACTER VARYING(80)
             );
+           
         """)
 
         self.conection.commit()
@@ -61,12 +63,12 @@ class DBManager:
 
         self.desconectarbd()
 
-    def conectarbd(self):
+    def conectarbd(self, usuario="postgres", senha="ifpe2021"):
         # IMPLEMENTAR O SGBDEXTERNO
 
         try:
             self.conection = psycopg2.connect(
-                f"dbname=postgres user={self.user} password={self.password} host={self.host} port={self.port}")
+                f"dbname=postgres user={usuario} password={senha} host={self.host} port={self.port}")
 
             self.cursor = self.conection.cursor()
 
@@ -87,10 +89,10 @@ class DBManager:
 
             print(f'Erro ao desconectar banco de dados: {e}')
 
-    def CreateViewPedidos(self):
+    def CreateViewPedidos(self, senha, usuario):
 
         try:
-            self.conectarbd()
+            self.conectarbd(senha, usuario)
             self.cursor.execute("""CREATE OR REPLACE VIEW ultimos_pedidos as SELECT cod_Produto, data_Compra, qtd_Produto, desc_Produto
                         FROM pedidos ORDER BY data_Compra ASC; """)
 

@@ -412,8 +412,10 @@ class Screen(Relatorios,  Validacao, Criptografia):
         self.janela.geometry('0x0')
         self.janela2 = Toplevel()
         self.dbManager = DBManager()
-        self.dbManager.Initialize()
-
+        if self.tipo_login(self.e_nome.get()):
+            self.dbManager.Initialize("postgres", "ifpe2021")
+        else:
+            self.dbManager.Initialize("trabalho", "123")
         self.validarCOD()
         self.Intialize()
         self.select_lista()
