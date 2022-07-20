@@ -142,11 +142,11 @@ class DBManager:
 
             self.conection.commit()
 
-        except Exception as e:
+        except psycopg2.IntegrityError as e:
 
             self.cursor.execute('ROLLBACK TO SAVEPOINT any1')
             messagebox.showwarning(
-                'Erro', f'Em atualizar pedidos verifique há um pedido selecionado.')
+                'Erro', f'{e} Em atualizar pedidos verifique há um pedido selecionado.')
 
         finally:
 
