@@ -131,9 +131,9 @@ class DBManager:
             self.desconectarbd()
 
     def Update(self, pedido):
-
+        self.conectarbd()
+        self.cursor.execute('SAVEPOINT any1')
         try:
-            self.conectarbd()
 
             # Controle de Concorrência
             comand = f"""LOCK TABLE pedidos IN ROW EXCLUSIVE  MODE; UPDATE pedidos SET data_compra = '{pedido.date}', qtd_Produto = {pedido.quantity}, desc_Produto = '{pedido.describe}' WHERE cod_Produto = {pedido.codigo}"""
@@ -144,6 +144,7 @@ class DBManager:
 
         except Exception as e:
 
+            self.cursor.execute('ROLLBACK TO SAVEPOINT any1')
             messagebox.showwarning(
                 'Erro', f'Em atualizar pedidos verifique há um pedido selecionado.')
 
